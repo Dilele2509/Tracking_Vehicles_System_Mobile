@@ -2,7 +2,6 @@ import { StyleSheet, TouchableOpacity, FlatList, Image, View, Text } from "react
 import React from "react";
 import GlobalStyles, { primaryColor } from "../../assets/styles/GlobalStyles";
 
-/* Nguyen Le Giang Ha do this task */
 function MenuBar(props) {
     const { listTitle, itemList, navigation } = props;
 
@@ -13,82 +12,86 @@ function MenuBar(props) {
                     {listTitle}
                 </Text>
             </View>
-            <FlatList data={itemList}
+            <FlatList
+                data={itemList}
                 showsVerticalScrollIndicator={false}
+                numColumns={2}
                 style={[GlobalStyles.mt15]}
                 renderItem={({ item }) => (
                     <TouchableOpacity
-                        key={item.product_id}
                         onPress={() => navigation.navigate("Product", { id: String(item.product_id) })}
-                        style={[styles.RecommendItem]}>
-                        {/* {console.log("ProdID: ", String(item.product_id))} */}
-                        <View style={[styles.imgAre]}>
-                            {item.deleted == 1 ? (<View style={[styles.disPro]}>
-                                <Text style={[styles.disProText]}>Unavailable</Text>
-                            </View>) : null}
-                            <Image style={[styles.RecommendImg]} source={{ uri: item.thumbnail }} />
+                        style={styles.VehicleListItem}
+                    >
+                        <View style={styles.imgArea}>
+                            {item.deleted == 1 && (
+                                <View style={styles.disPro}>
+                                    <Text style={styles.disProText}>Unavailable</Text>
+                                </View>
+                            )}
+                            <Image style={styles.VehicleListImg} source={item.thumbnail} />
                         </View>
-
-                        <View style={[GlobalStyles.pad10, styles.RecommendContent]}>
-                            <Text style={[GlobalStyles.h5, { maxWidth: 250 }]}>{item.title}</Text>
-                            <Text style={[styles.discountText]}>Sold: {item.sold}</Text>
+                        <View style={styles.VehicleListContent}>
+                            <Text style={[GlobalStyles.h6, styles.title,{fontWeight:'500'}]}>{item.title}</Text>
                         </View>
                     </TouchableOpacity>
                 )}
+                keyExtractor={(item, index) => item.product_id ? item.product_id.toString() : index.toString()} // Fallback to index if product_id is missing
             />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    RecommendItem: {
-        display: "flex",
-        flexDirection: "row",
-        marginTop: 10,
+    VehicleListItem: {
+        flex: 1,
+        margin: 5,
+        backgroundColor: primaryColor.whitePrimary,
+        borderRadius: 8,
+        overflow: "hidden",
+        elevation: 2, // For shadow on Android
+        shadowColor: "#000", // Shadow on iOS
+        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 1 },
     },
-    RecommendImg: {
-        width: 100,
-        height: 100,
-        resizeMode: "center",
-        objectFit: "cover"
+    imgArea: {
+        width: "100%",
+        height: 150,
     },
-    imgAre: {
-        width: 100,
-        height: 100,
+    VehicleListImg: {
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
     },
     disPro: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,.5)",
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0,0,0,0.5)",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        zIndex: 1,
     },
     disProText: {
         fontWeight: "500",
         color: primaryColor.whitePrimary,
-        fontSize: 15
+        fontSize: 15,
     },
-    RecommendContent: {
-        display: "flex",
+    VehicleListContent: {
+        flex: 1,
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "#F5F7F8",
-        marginRight: 10,
-        width: "100%"
+        paddingHorizontal: 10,
+        paddingBottom: 10,
+        backgroundColor: "#F1F1F1",
+        padding: 10,
+        minHeight: 70,
+    },
+    title: {
+        maxWidth: "100%",
     },
     discountText: {
-        padding: 3,
-        alignSelf: "flex-start",
-        borderWidth: 1,
-        borderColor: "#C40C0C",
-        borderStyle: "solid",
+        paddingTop: 5,
         color: "#C40C0C",
-        fontSize: 12
-    }
-})
+        fontSize: 16,
+    },
+});
 
 export default MenuBar;

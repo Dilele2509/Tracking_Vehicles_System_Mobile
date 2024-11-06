@@ -40,7 +40,7 @@ function ResetPass({ navigation, route }) {
     };
 
     return (
-        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.creamPrimary }]}>
+        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.whitePrimary }]}>
             <ScrollView contentContainerStyle={[GlobalStyles.padScreen20, styles.flex1]}>
                 <View style={{ flex: 9 }}>
                     <Text style={[GlobalStyles.h1, { color: primaryColor.yellowPrimary }]}>Reset Password</Text>

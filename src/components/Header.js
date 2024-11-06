@@ -5,21 +5,20 @@ import { Feather } from '@expo/vector-icons';
 import SearchFilter from "./SearchFilter";
 import axios from "../API/axios";
 
-/* Le Thuy Tuong Vy do this task */
 function Header(props) {
     const { navigation, userName, setHasResult, searchData, setSearchData, setSearchResult, setIsLoading } = props;
 
-    const config = {
+/*     const config = {
         headers: {
             "Content-Type": "application/json"
         },
         withCredentials: true
-    };
+    }; */
 
-    useEffect(() => {
+/*     useEffect(() => {
         if (searchData !== '') {
             setHasResult(true);
-            axios.post('/product/search/', { title: searchData }, config)
+            axios.post('/vehicles/search/', { title: searchData }, config)
                 .then((response) => {
                     setSearchResult(response.data);
                 });
@@ -27,9 +26,9 @@ function Header(props) {
             setSearchResult([]);
             setHasResult(false);
         }
-    }, [searchData]);
+    }, [searchData]); */
 
-    const handleChooseFile = async (fileUri) => {
+    /* const handleChooseFile = async (fileUri) => {
         const formData = new FormData();
         formData.append('thumbnail', {
             uri: fileUri,
@@ -60,26 +59,24 @@ function Header(props) {
         } catch (error) {
             console.error('Error fetching similar images:', error);
         }
-    };
+    }; */
 
     return (
-        <View style={[GlobalStyles.mb10, styles.relativeContainer]}>
+        <View style={[styles.relativeContainer]}>
             <TouchableOpacity
                 onPress={() => navigation.navigate("Account")}
                 style={[GlobalStyles.flexRow, GlobalStyles.padScreen20, styles.headerContainer]}>
                 <Text style={GlobalStyles.h3}>Hi, {userName}</Text>
-                <Feather name="bell" size={24} color={primaryColor.yellowPrimary} />
             </TouchableOpacity>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <SearchFilter
                         value={searchData}
                         onChangeText={setSearchData}
-                        onFileChosen={handleChooseFile}
                         iconColor={primaryColor.yellowPrimary}
-                        placeholder={"Enter your favorite food"} />
+                        placeholder={"Enter car you want to find"} />
                 </KeyboardAvoidingView>
-            </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback> */}
         </View>
     );
 }

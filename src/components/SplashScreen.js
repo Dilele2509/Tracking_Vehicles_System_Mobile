@@ -2,7 +2,6 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native'
 import React from 'react'
 import { primaryColor } from '../../assets/styles/GlobalStyles'
 
-/* Nguyen Le Giang Ha do this task */
 const SplashScreen = ({ isLoading }) => {
     return (
         <>
@@ -20,7 +19,7 @@ export default SplashScreen
 
 const styles = StyleSheet.create({
     loadingContainer: {
-        backgroundColor: primaryColor.creamPrimary,
+        backgroundColor: primaryColor.whitePrimary,
         alignItems: 'center',
         justifyContent: 'center',
     },

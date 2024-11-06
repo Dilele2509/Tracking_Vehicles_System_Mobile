@@ -1,7 +1,6 @@
 import React,{ Text, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 
-/* Le Thuy Tuong Vy do this task */
 function FillButton(props) {
     const {onPress, text, color, backgroundColor} = props
     return (

@@ -1,5 +1,3 @@
-/* Le Thuy Tuong Vy do this task */
-
 import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import GlobalStyles, { primaryColor } from "../../assets/styles/GlobalStyles";

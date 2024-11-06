@@ -4,7 +4,6 @@ import { Fontisto, Feather } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { primaryColor } from "../../assets/styles/GlobalStyles";
 
-/* Nguyen Le Giang Ha do this task */
 function SearchFilter(props) {
     const [isFocus, setIsFocus] = useState(false);
     const { placeholder, iconColor, value, onChangeText, onFileChosen } = props;

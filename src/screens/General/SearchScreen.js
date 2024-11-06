@@ -10,7 +10,7 @@ function SearchScreen({ navigation, route }) {
     const { titlePage, allList } = route.params;
 
     return (
-        <SafeAreaView style={[{ flex: 1 , backgroundColor: primaryColor.creamPrimary}]}>
+        <SafeAreaView style={[{ flex: 1 , backgroundColor: primaryColor.whitePrimary}]}>
             <View style={[GlobalStyles.padScreen20, styles.headerPage]}>
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <AntDesign name="arrowleft" size={24} color={primaryColor.yellowPrimary} />

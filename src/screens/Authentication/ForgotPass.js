@@ -5,7 +5,6 @@ import { InputBox, FillButton } from "../../components";
 import axios from "../../API/axios";
 
 
-/* Tran Binh Phuoc do this task */
 function ForgotPass({ navigation }) {
     const [email, setEmail] = useState('');
 
@@ -37,7 +36,7 @@ function ForgotPass({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.creamPrimary }]}>
+        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.whitePrimary }]}>
             <View style={[GlobalStyles.padScreen20]}>
                 <Text style={[GlobalStyles.h1, { color: primaryColor.yellowPrimary }]}>FORGOT PASSWORD</Text>
                 <View style={[styles.mTop25]}>

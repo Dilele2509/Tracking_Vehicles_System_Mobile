@@ -56,7 +56,7 @@ function OTPScreen({ navigation, route }) {
   }
 
   return (
-    <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.creamPrimary }]}>
+    <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.whitePrimary }]}>
       <View style={[GlobalStyles.padScreen20]}>
         <Text style={[GlobalStyles.h1, { color: primaryColor.yellowPrimary }, GlobalStyles.mb20]}>Verification</Text>
         <View style={[GlobalStyles.mt10]}>

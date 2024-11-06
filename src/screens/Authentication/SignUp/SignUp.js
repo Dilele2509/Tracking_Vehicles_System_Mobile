@@ -7,13 +7,13 @@ import { InputBox, CheckBox, FillButton } from "../../../components";
 
 function SignUp({ navigation, route }) {
     const [secureText, setSecureText] = useState(true)
-    const { fullName, email, phone, address } = route.params
+    const { fullName, email, phone, userType} = route.params
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const handleToggle = () => setSecureText(!secureText)
 
-    /* const handleSignUp = async () => {
+    const handleSignUp = async () => {
         try {
             if (password === '' || confirmPassword === '') {
                 Alert.alert("Need to fill them all out")
@@ -25,12 +25,11 @@ function SignUp({ navigation, route }) {
                 return;
             }
 
-            const response = await axios.post('/user/add', {
-                role_id: 1, // this is hardcoded to set the default role as user
-                full_name: fullName,
+            const response = await axios.post('/user/add-user', {
+                role_id: userType, 
+                fullname: fullName,
                 email: email,
-                address: address,
-                phone_num: phone,
+                phone_number: phone,
                 password: password,
             });
 
@@ -44,14 +43,14 @@ function SignUp({ navigation, route }) {
             console.error('Registration failed:', error);
             Alert.alert('Registration failed:', error.message || error.toString());
         }
-    }; */
-    const handleSignUp = async () => {
+    }; 
+    /* const handleSignUp = async () => {
         Alert.alert("Signup success!")
         navigation.replace("Login");
-    }
+    } */
 
     return (
-        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.creamPrimary }]}>
+        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.whitePrimary }]}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView
                     style={[GlobalStyles.padScreen20, { flex: 1 }]}

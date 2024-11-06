@@ -2,16 +2,15 @@ import { StyleSheet } from "react-native";
 
 // color constants
 export const primaryColor = {
-    mintPrimary: "#D9EDBF",
     yellowPrimary: "#E9BD20",
     darkPrimary: "#3B3B3B",
-    lightPrimary: "#90D26D",
-    creamPrimary: "#FFFBEB",
-    whitePrimary: "#fff",
+    lightPrimary: "#FEF6E9",
+    whitePrimary: "#fffefd",
     blackPrimary: "#444",
     brownPrimary: "#C06014",
-    greenPrimary: "#379237",
-    redPrimary: "#CD1818"
+    greenPrimary: "#06D001",
+    bluePrimary: "#0079FF",
+    redPrimary: "#FC2947"
 };
 
 // global style

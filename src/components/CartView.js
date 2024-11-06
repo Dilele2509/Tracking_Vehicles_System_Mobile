@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 55,
         flexDirection: "row",
-        backgroundColor: primaryColor.creamPrimary,
+        backgroundColor: primaryColor.whitePrimary,
         alignItems: "center",
         justifyContent: "space-between",
         shadowColor: "#000",

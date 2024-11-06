@@ -1,18 +1,18 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
+import { useFocusEffect } from '@react-navigation/native';
 import { StyleSheet, View, Text, TouchableOpacity, ScrollView, Animated } from "react-native";
 import GlobalStyles, { primaryColor } from "../../assets/styles/GlobalStyles";
-import { Ionicons, MaterialCommunityIcons, Entypo } from '@expo/vector-icons';
+import { FontAwesome, Ionicons, Entypo, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 import axios from "../API/axios";
 
 
 
-/* Tran Binh Phuoc do this task */
-function Categories(props) {
-    const { navigation, productAllList } = props;
+function Categories({ navigation }) {
     const scrollViewRef = useRef(null);
     const [scrollX] = useState(new Animated.Value(0));
     const [contentWidth, setContentWidth] = useState(1);
     const [containerWidth, setContainerWidth] = useState(1);
+    const [vehicleRental, setVehicleRental] = useState([]);
 
     const handleContentSizeChange = (contentWidth) => {
         setContentWidth(contentWidth);
@@ -30,18 +30,46 @@ function Categories(props) {
         extrapolate: 'clamp',
     });
 
-    const setListProduct = (catID, titlePage) => {
-        axios.post('/product/cat', { category_id: catID })
+    const fetchData = useCallback(() => {
+        axios.post('/vehicles/user-id')
             .then((response) => {
                 if (Array.isArray(response.data)) {
-                    navigation.navigate("ViewAll", { titlePage: titlePage, prevPage: 'Home', allList: response.data })
-                } else {
-                    console.error('API response does not contain an array:', response.data);
+                    // Filter out only the data with status == 1
+                    const filteredData = response.data.filter(vehicle => vehicle.status === 1);
+                    /* console.log(filteredData); */
+                    setVehicleRental(filteredData);
                 }
             })
             .catch((error) => {
-                console.error('Error fetching product data:', error);
+                console.error('Error fetching vehicles:', error);
             });
+    }, []); // Empty dependency array so that it's only defined once
+
+    /* call back when focus screen */
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [fetchData])
+    );
+
+    const handleRentalVehicle = () => {
+        navigation.navigate("wallet");
+    }
+
+    const handleDriver = () => {
+        /* navigation.navigate("DriverList", { titlePage: 'Driver List', allList: drivers }); */
+    }
+
+    const handleBlog = () => {
+        navigation.navigate("BlogScreen");
+    }
+
+    const handleDeviceShop = () => {
+        navigation.navigate("DeviceShop");
+    }
+
+    const handleHowToUse = () => {
+        navigation.navigate("HowToUse");
     }
 
     return (
@@ -60,48 +88,40 @@ function Categories(props) {
             >
                 <View style={[GlobalStyles.flexRow, styles.container]}>
                     <TouchableOpacity
-                        onPress={() => {
-                            setListProduct(1, "Main Dish");
-                        }}
+                        onPress={handleRentalVehicle}
+                        style={[GlobalStyles.ml20, styles.catItem]}
+                    >
+                        <Ionicons name="wallet" style={{ marginBottom: 7 }} size={20} color="#399918" />
+                        <Text style={[{ fontSize: 13, color: "#399918" }]}>Wallet</Text>
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity
+                        onPress={handleDriver} // Directly call the function
                         style={[GlobalStyles.ml20, styles.catItem]}>
-                        <MaterialCommunityIcons style={{ marginBottom: 7 }} name="food-turkey" size={28} color="#FB6D48" />
-                        <Text style={[{ color: "#DD5746" }]}>Main Dish</Text>
+                        <FontAwesome6 name="drivers-license" style={{ marginBottom: 7 }} size={20} color="#FFAF45" />
+                        <Text style={[{ fontSize: 13, color: "#FFAF45" }]}>License</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => {
-                            setListProduct(2, "Side Dish");
-                        }}
+                        onPress={handleDeviceShop}
                         style={[GlobalStyles.ml20, styles.catItem]}>
-                        <Ionicons style={{ marginBottom: 7 }} name="fast-food" size={28} color="#FFAF45" />
-                        <Text style={[{ color: "#FFAF45" }]}>Side Dish</Text>
+                        <MaterialCommunityIcons name="car-info" style={{ marginBottom: 7 }} size={20} color="#524C42" />
+                        <Text style={[{ fontSize: 13, color: "#524C42" }]}>Vehicle</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => {
-                            setListProduct(3, "Snack");
-                        }}
+                        onPress={handleBlog}
                         style={[GlobalStyles.ml20, styles.catItem]}>
-                        <MaterialCommunityIcons style={{ marginBottom: 7 }} name="food-hot-dog" size={28} color="#ED9455" />
-                        <Text style={[{ color: "#ED9455" }]}>Snack</Text>
+                        <FontAwesome name="newspaper-o" style={{ marginBottom: 7 }} size={20} color="#E4003A" />
+                        <Text style={[{ fontSize: 13, color: "#E4003A" }]}>Blog</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={() => {
-                            setListProduct(4, "Drink");
-                        }}
+                        onPress={handleHowToUse}
                         style={[GlobalStyles.ml20, styles.catItem]}>
-                        <Entypo style={{ marginBottom: 7 }} name="drink" size={28} color="#40679E" />
-                        <Text style={[{ color: "#40679E" }]}>Drink</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            navigation.navigate("ViewAll", { titlePage: 'Menu', prevPage: 'Home', allList: productAllList })
-                        }}
-                        style={[GlobalStyles.ml20, styles.catItem]}>
-                        <MaterialCommunityIcons style={{ marginBottom: 7 }} name="food-fork-drink" size={28} color="#ED9455" />
-                        <Text style={[{ color: "#ED9455" }]}>All Menu</Text>
+                        <Entypo name="help-with-circle" style={{ marginBottom: 7 }} size={20} color="#40679E" />
+                        <Text style={[{ fontSize: 13, color: "#40679E" }]}>How to use</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

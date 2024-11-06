@@ -2,45 +2,29 @@ import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FooterProvider } from '../provider/FooterProvider';
+import AppTabNavigator from './AppTabNavigator';
 
 // Import screens
-// Authentication screen
 import WelcomeScreen from '../screens/General/WelcomeScreen';
 import Login from '../screens/Authentication/Login';
 import SignUp from '../screens/Authentication/SignUp/SignUp';
 import SignUpInfo from '../screens/Authentication/SignUp/SignUpInfo';
 import ForgotPass from '../screens/Authentication/ForgotPass';
 import OTPScreen from '../screens/Authentication/OTPScreen';
-
-// Owner screen
-import HomeScreenOwner from "../screens/Owner/HomeScreen";
-import AccountScreen from "../screens/General/AccountScreen";
+import ViewAllScreen from '../screens/General/ViewAllScreen';
+import LicenseScreen from '../screens/Driver/LicenseScreen';
+import BlogScreen from '../screens/General/BlogScreen';
+import AddVehicleScreen from '../screens/Driver/AddVehicleScreen';
+import { Text, TouchableOpacity } from 'react-native';
+import { primaryColor } from '../../assets/styles/GlobalStyles';
+import VehicleInfoScreen from '../screens/Driver/VehicleInfoScreen';
+import HowToUseScreen from '../screens/General/HowToUseScreen';
+import EditUserInfo from '../screens/General/Account/EditUserInfo';
+import EditSecurity from '../screens/General/Account/EditSecurity';
 
 const Stack = createNativeStackNavigator();
 
-// Define routes for owners
-const ownerRoutes = [
-    { name: 'HomeScreen', component: HomeScreenOwner },
-    { name: 'Account', component: AccountScreen },
-];
-
-// Define routes for drivers
-const driverRoutes = [
-    { name: 'HomeScreen', component: HomeScreenOwner }, // Use a separate HomeScreen for drivers if available
-    { name: 'DriverAccount', component: AccountScreen },
-    // Add other driver-specific screens...
-];
-
-// Function to create a stack navigator for a given role
-const createStackNavigator = (routes) => (
-    routes.map(route => (
-        <Stack.Screen key={route.name} name={route.name} component={route.component} />
-    ))
-);
-
 function AppNavigator() {
-    const [userRole] = useState('owner'); // For example, use 'owner' or 'driver' to switch roles
-    const useRoutes = userRole === 'owner' ? ownerRoutes : driverRoutes;
 
     return (
         <FooterProvider>
@@ -52,9 +36,28 @@ function AppNavigator() {
                     <Stack.Screen name="SignUpInfo" component={SignUpInfo} />
                     <Stack.Screen name="forgotPass" component={ForgotPass} />
                     <Stack.Screen name="OTPScreen" component={OTPScreen} />
-
-                    {/* Render role-specific routes */}
-                    {createStackNavigator(useRoutes)}
+                    <Stack.Screen name="ViewAll" component={ViewAllScreen} />
+                    <Stack.Screen name="License" component={LicenseScreen} />
+                    <Stack.Screen name="BlogScreen" component={BlogScreen} />
+                    <Stack.Screen
+                        name="AddVehicle"
+                        component={AddVehicleScreen}
+                        options={({ navigation }) => ({
+                            animationEnabled: true,
+                            presentation: 'modal', // Use modal for slide-up effect
+                            headerShown: true, // Enable header for AddVehicleScreen
+                            headerRight: () => (
+                                <TouchableOpacity onPress={() => navigation.goBack()}>
+                                    <Text style={{ marginRight: 10, color: primaryColor.bluePrimary }}>Cancel</Text>
+                                </TouchableOpacity>
+                            ),
+                        })}
+                    />
+                    <Stack.Screen name="VehicleInfo" component={VehicleInfoScreen} />
+                    <Stack.Screen name="HowToUse" component={HowToUseScreen} />
+                    <Stack.Screen name='EditUser' component={EditUserInfo}/>
+                    <Stack.Screen name='EditSecurity' component={EditSecurity}/>
+                    <Stack.Screen name="Main" component={AppTabNavigator} />
                 </Stack.Navigator>
             </NavigationContainer>
         </FooterProvider>

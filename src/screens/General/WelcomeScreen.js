@@ -28,7 +28,7 @@ function WelcomeScreen({ navigation }) {
     }, []);
     return (
         <ImageBackground
-            source={require("../../../assets/images/welcome.jpeg")}
+            source={require("../../../assets/Images/welcome.jpeg")}
             style={styles.container}
         >
             <SafeAreaView style={[styles.content]}>
@@ -48,7 +48,7 @@ function WelcomeScreen({ navigation }) {
                     <Animated.View style={[styles.buttonLayout, { opacity: buttonAnimation }]}>
                         <FillButton onPress={() => navigation.navigate("Login")} text={'Sign In To Start'}
                             color={primaryColor.whitePrimary}
-                            backgroundColor={primaryColor.yellowPrimary} />
+                            backgroundColor={primaryColor.darkPrimary} />
 
                         <TouchableOpacity onPress={() => navigation.navigate("SignUpInfo")}>
                             <Text style={[styles.commonText]}>Do not have account?</Text>

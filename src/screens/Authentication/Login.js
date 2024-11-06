@@ -4,8 +4,6 @@ import GlobalStyles, { primaryColor } from "../../../assets/styles/GlobalStyles"
 import { InputBox, CheckBox, FillButton } from "../../components";
 import axios from "../../API/axios";
 
-
-/* Tran Binh Phuoc do this task */
 function Login({ navigation }) {
     const [secureText, setSecureText] = useState(true);
     const [email, setEmail] = useState('');
@@ -15,7 +13,7 @@ function Login({ navigation }) {
     const handleToggle = () => setSecureText(!secureText);
 
     /* call axios to check info to login */
-    /* const handleLogin = async () => {
+    const handleLogin = async () => {
         const config = {
             headers: {
                 "Content-Type": "application/json"
@@ -29,13 +27,16 @@ function Login({ navigation }) {
                 return;
             }
 
-            const response = await axios.post('/login', { email, password }, config);
+            const response = await axios.post('/login/user-login', { email, password }, config);
 
             if (response.data.status !== 'Error') {
-                const userInfo = response.data[0];
-                if (userInfo.deleted !== 1) {
+                const userInfo = response.data;
+                // Convert buffer to integer
+                const deleted = userInfo.deleted.data[0];
+                console.log('deleted: ', deleted);
+                if (deleted !== 1) {
                     Alert.alert('login successful');
-                    navigation.replace('Home');
+                    navigation.replace('Main');
                 } else {
                     Alert.alert("Your account has been disabled");
                 }
@@ -46,13 +47,13 @@ function Login({ navigation }) {
             console.error('Login failed:', error);
             Alert.alert("Login failed, please try again");
         }
-    }; */
-    const handleLogin = async () => {
-        Alert.alert('login successful');
-        navigation.replace('HomeScreen');
-    }
+    }; 
+
+/*     const handleLogin = ()=>{
+        navigation.navigate("Main");
+    } */
     return (
-        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.creamPrimary }]}>
+        <SafeAreaView style={[GlobalStyles.heighFullScreen, { backgroundColor: primaryColor.whitePrimary }]}>
             <ScrollView contentContainerStyle={[GlobalStyles.padScreen20, styles.flex1]}>
                 <View style={{ flex: 9 }}>
                     <Text style={[GlobalStyles.h1, { color: primaryColor.yellowPrimary }]}>SIGN IN</Text>
