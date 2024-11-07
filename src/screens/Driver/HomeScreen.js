@@ -88,7 +88,7 @@ function HomeScreen({ navigation }) {
                                 onPress={ () => navigation.navigate('Account')}
                                 style={styles.accountContainer}>
                                 <Image style={styles.userAva} source={{ uri: `${BASEURL}${userInfo.avatar}` }} />
-                                {/* {console.log(`${BASEURL}${userInfo.avatar}`)} */}
+                                {console.log(`${BASEURL}${userInfo.avatar}`)}
                                 <View style={styles.userContent}>
                                     <Text style={[styles.userName]}>{userInfo.fullname}</Text>
                                 </View>
