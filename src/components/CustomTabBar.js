@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
 import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import { FooterContext } from "../provider/FooterProvider";
-import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, FontAwesome } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { primaryColor } from "../../assets/styles/GlobalStyles";
 
 const iconComponents = {
     MaterialCommunityIcons,
+    MaterialIcons,
     AntDesign,
     Feather,
     Ionicons,
-    FontAwesome,
+    FontAwesome
 };
 
 function CustomTabBar({ navigation }) {
@@ -56,7 +57,8 @@ const styles = StyleSheet.create({
     },
     container: {
         backgroundColor: primaryColor.whitePrimary,
-        marginTop: -20,
+        /* marginTop: -20, */
+        paddingTop: 10,
         width: "100%",
         flexDirection: "row",
         justifyContent: "space-around",

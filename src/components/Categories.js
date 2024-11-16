@@ -30,42 +30,21 @@ function Categories({ navigation }) {
         extrapolate: 'clamp',
     });
 
-    const fetchData = useCallback(() => {
-        axios.post('/vehicles/user-id')
-            .then((response) => {
-                if (Array.isArray(response.data)) {
-                    // Filter out only the data with status == 1
-                    const filteredData = response.data.filter(vehicle => vehicle.status === 1);
-                    /* console.log(filteredData); */
-                    setVehicleRental(filteredData);
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching vehicles:', error);
-            });
-    }, []); // Empty dependency array so that it's only defined once
 
-    /* call back when focus screen */
-    useFocusEffect(
-        useCallback(() => {
-            fetchData();
-        }, [fetchData])
-    );
-
-    const handleRentalVehicle = () => {
+    const handleWallet = () => {
         navigation.navigate("wallet");
     }
 
     const handleDriver = () => {
-        /* navigation.navigate("DriverList", { titlePage: 'Driver List', allList: drivers }); */
+        navigation.navigate("License");
     }
 
     const handleBlog = () => {
         navigation.navigate("BlogScreen");
     }
 
-    const handleDeviceShop = () => {
-        navigation.navigate("DeviceShop");
+    const handleVehicle = () => {
+        navigation.navigate("VehicleInfo");
     }
 
     const handleHowToUse = () => {
@@ -88,7 +67,7 @@ function Categories({ navigation }) {
             >
                 <View style={[GlobalStyles.flexRow, styles.container]}>
                     <TouchableOpacity
-                        onPress={handleRentalVehicle}
+                        onPress={handleWallet}
                         style={[GlobalStyles.ml20, styles.catItem]}
                     >
                         <Ionicons name="wallet" style={{ marginBottom: 7 }} size={20} color="#399918" />
@@ -104,7 +83,7 @@ function Categories({ navigation }) {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        onPress={handleDeviceShop}
+                        onPress={handleVehicle}
                         style={[GlobalStyles.ml20, styles.catItem]}>
                         <MaterialCommunityIcons name="car-info" style={{ marginBottom: 7 }} size={20} color="#524C42" />
                         <Text style={[{ fontSize: 13, color: "#524C42" }]}>Vehicle</Text>

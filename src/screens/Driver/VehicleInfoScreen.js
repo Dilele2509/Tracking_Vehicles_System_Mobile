@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
-import GlobalStyles, {primaryColor} from '../../../assets/styles/GlobalStyles';
+import GlobalStyles, { primaryColor } from '../../../assets/styles/GlobalStyles';
 import { AntDesign } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../API/axios';
+import { BASEURL } from '@env'
 
 const { width } = Dimensions.get('window');
-export default function DeviceShopScreen({navigation}) {
-    // State for quantity and in-stock status
-    const [quantity, setQuantity] = useState(1);
-    const [inStock, setInStock] = useState(10);
+export default function DeviceShopScreen({ navigation }) {
+    const [vehicles, setVehicles] = useState({})
+    const fetchData = useCallback(() => {
+        axios.post(`/vehicles/user-id`)
+            .then((response) => {
+                const data = response.data;
+                setVehicles(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
 
-    // Handle quantity increment and decrement
-    const incrementQuantity = () => {
-        setQuantity(prevQuantity => prevQuantity + 1);
-    };
+    }, []);
 
-    const decrementQuantity = () => {
-        if (quantity > 1) {
-            setQuantity(prevQuantity => prevQuantity - 1);
-        }
-    };
-
-    const handleQuantChange = (value) => {
-        if (!isNaN(value) && value > 0) {
-            setQuantity(parseInt(value, 10));
-        } else if (value === '' || value === 0) {
-            setQuantity(1); // Reset to 1 if input is cleared
-        }
-    };
+    /* call back when focus screen */
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [fetchData])
+    );
 
     return (
         <SafeAreaView style={styles.deviceContainer}>
@@ -34,174 +34,132 @@ export default function DeviceShopScreen({navigation}) {
                 <TouchableOpacity onPress={() => { navigation.goBack() }}>
                     <AntDesign name="arrowleft" size={24} color={primaryColor.yellowPrimary} />
                 </TouchableOpacity>
-                <Text style={styles.titleText}>Device Shop</Text>
+                <Text style={styles.titleText}>Vehicle's Information</Text>
             </View>
-            <Text style={styles.deviceTitle}>HL-STM4G</Text>
-            <View style={styles.deviceContent}>
-                <View style={styles.deviceImg}>
-                    <Image source={require('../../../assets/Images/device.png')} style={styles.image} />
+            <View style={[styles.vehicleInfoContent]}>
+                <View>
+                    <Image style={styles.vehicleImg} source={{ uri: `${BASEURL}${vehicles.thumbnail}` }} />
                 </View>
-                <View style={styles.contentDevice}>
-                    <View style={styles.contentBox}>
-                        <View style={styles.contentItemPrice}>
-                            <Text style={styles.devicePrice}>1,559,000 VND</Text>
-                            <View style={styles.inStock}>
-                                <Text style={styles.inStockText}>In Stock:</Text>
-                                <Text style={[styles.inStockAmount, inStock < 5 && styles.lowStock]}>{inStock}</Text>
-                            </View>
-                            <View style={styles.quantityControls}>
-                                <TouchableOpacity style={styles.quantityButton} onPress={decrementQuantity}>
-                                    <Text style={styles.quantityButtonText}>-</Text>
-                                </TouchableOpacity>
-                                <TextInput
-                                    style={styles.quantityInput}
-                                    keyboardType="numeric"
-                                    value={String(quantity)}
-                                    onChangeText={handleQuantChange}
-                                />
-                                <TouchableOpacity style={styles.quantityButton} onPress={incrementQuantity}>
-                                    <Text style={styles.quantityButtonText}>+</Text>
-                                </TouchableOpacity>
-                            </View>
-                            <TouchableOpacity style={styles.buyButton}>
-                                <Text style={styles.buyButtonText}>Buy Now</Text>
-                            </TouchableOpacity>
-                        </View>
+                <View style={styles.vehicleInfo}>
+                    {/* Tiêu đề Xe */}
+                    <Text style={styles.vehicleTitle}>
+                        {vehicles.vehicle_brand} {vehicles.vehicle_line}
+                    </Text>
+                    <Text style={styles.licensePlate}>{vehicles.license_plate}</Text>
+
+                    {/* Thông tin cơ bản */}
+                    <View style={styles.infoSection}>
+                        <Text style={styles.vehicleDetailLabel}>Odometer:</Text>
+                        <Text style={styles.vehicleDetailValue}>12,000 km</Text>
+                    </View>
+                    <View style={styles.infoSection}>
+                        <Text style={styles.vehicleDetailLabel}>Condition:</Text>
+                        <Text style={styles.vehicleDetailValue}>9/10</Text>
+                    </View>
+                    <View style={styles.infoSection}>
+                        <Text style={styles.vehicleDetailLabel}>Km per day:</Text>
+                        <Text style={styles.vehicleDetailValue}>{vehicles.km_per_day} Km</Text>
+                    </View>
+                    <View style={styles.infoSection}>
+                        <Text style={styles.vehicleDetailLabel}>Parked time:</Text>
+                        <Text style={styles.vehicleDetailValue}>{vehicles.parked_time}</Text>
+                    </View>
+
+                    {/* Trạng thái và ID thiết bị */}
+                    <View style={styles.statusSection}>
+                        <Text style={styles.vehicleDetailLabel}>Status:</Text>
+                        <Text style={[styles.vehicleDetailValue, styles.statusValue]}>
+                            {vehicles.status ? 'Driving' : 'Parking'}
+                        </Text>
+                    </View>
+                    <View style={styles.infoSection}>
+                        <Text style={styles.vehicleDetailLabel}>Device ID:</Text>
+                        <Text style={styles.vehicleDetailValue}>{vehicles.device_id}</Text>
                     </View>
                 </View>
-            </View>
-            <View style={styles.contentItem}>
-                <Text style={styles.sectionTitle}>Description</Text>
-                <Text style={styles.description}>The device uses 4G connectivity technology to transmit its current location. This way, it can extend the range without being limited by OS or software platform. The device is installed directly into the vehicle, ensuring a power source without frequent battery charging.</Text>
+
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    deviceContainer: {
+        flex: 1,
+    },
     headerPage: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "flex-start",
-        position: "relative",
-        width: width - 40, // adjust according to padding/margin
+        paddingVertical: 15,
+        paddingHorizontal: 20,
     },
     titleText: {
-        fontSize: 24,
-        fontWeight: '500',
-        color: primaryColor.yellowPrimary,
-        position: "absolute",
-        width: width,
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: primaryColor.darkPrimary,
         textAlign: "center",
-        zIndex: -999
+        flex: 1,
+        marginRight: 24, // Space for back icon
     },
-    deviceContainer: {
+    vehicleInfoContent: {
+        padding: 20,
+    },
+    vehicleImg: {
+        width: '100%',
+        height: 250,
+        borderRadius: 10,
+        resizeMode: "cover",
+        marginBottom: 20,
+    },
+    vehicleInfo: {
+        backgroundColor: '#fff',
         padding: 20,
         borderRadius: 10,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        backgroundColor: '#ffffff',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 6,
+        elevation: 4,
+        marginBottom: 20,
     },
-    deviceTitle: {
-        textAlign: 'center',
-        fontSize: 30,
-        fontWeight: '700',
-    },
-    deviceContent: {
-        marginTop: 20,
-        flexDirection: 'row',
-        height: 'auto',
-    },
-    deviceImg: {
-        flexBasis: '40%',
-        maxWidth: '40%',
-        margin: 20,
-    },
-    image: {
-        height: 280,
-        width: '100%',
-        resizeMode: 'cover',
-        borderRadius: 10,
-    },
-    contentDevice: {
-    },
-    contentBox: {
-    },
-    contentItemPrice: {
-        marginTop: 20,
-    },
-    contentItem: {
-        padding: 20
-    },
-    sectionTitle: {
-        fontSize: 18,
-        textTransform: 'uppercase',
-        fontWeight: '600',
+    vehicleTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: primaryColor.darkPrimary,
         marginBottom: 5,
     },
-    description: {
-        textAlign: 'justify',
-        fontSize: 14,
-    },
-    devicePrice: {
+    licensePlate: {
+        fontSize: 18,
         fontWeight: '600',
-        fontSize: 24,
-        color: '#FF0000',
+        color: primaryColor.yellowPrimary,
+        marginBottom: 15,
+    },
+    infoSection: {
+        flexDirection: "row",
+        justifyContent: "space-between",
         marginBottom: 10,
     },
-    inStock: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    inStockText: {
-        fontWeight: '500',
-        marginRight: 10,
-    },
-    inStockAmount: {
-        fontWeight: '500',
+    vehicleDetailLabel: {
         fontSize: 16,
+        color: '#666',
     },
-    lowStock: {
-        color: 'red',
+    vehicleDetailValue: {
+        fontSize: 16,
+        color: '#333',
+        fontWeight: '500',
     },
-    quantityControls: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 20,
+    statusSection: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 15,
+        paddingTop: 10,
+        borderTopWidth: 1,
+        borderTopColor: '#eee',
     },
-    quantityButton: {
-        borderWidth: 1,
-        borderColor: '#eee',
-        width: 50,
-        height: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    quantityButtonText: {
-        fontSize: 24,
-    },
-    quantityInput: {
-        width: 50,
-        height: 50,
-        textAlign: 'center',
-        borderWidth: 1,
-        borderColor: '#eee',
-        marginHorizontal: 5,
-        fontSize: 18,
-        color: '#909090',
-    },
-    buyButton: {
-        backgroundColor: '#1c1c1c',
-        borderRadius: 5,
-        paddingVertical: 15,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 10,
-    },
-    buyButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '700',
+    statusValue: {
+        color: primaryColor.yellowPrimary,
+        fontWeight: 'bold',
     },
 });
+
+

@@ -7,31 +7,31 @@ import { AntDesign } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
-export default function HowToUseScreen({navigation}) {
+export default function HowToUseScreen({ navigation }) {
     const steps = [
         {
             id: 1,
-            title: "Tracking Your Vehicle",
-            description: "Tap on 'Vehicles' to see your registered vehicles and track their locations in real-time.",
-            icon: () => <MaterialIcons name="gps-fixed" size={30} color={primaryColor.darkPrimary} />
+            title: "Home",
+            description: "Check your wallet balance, monitor balance fluctuations, view your driver license, vehicle information, and ratings from customers. Also, explore blog posts to gain useful insights for your job.",
+            icon: () => <MaterialIcons name="home" size={30} color={primaryColor.darkPrimary} />,
         },
         {
             id: 2,
-            title: "Driving Mode",
-            description: "Select a vehicle and switch to Driving Mode to see live navigation and route suggestions.",
-            icon: () => <MaterialIcons name="directions-car" size={30} color={primaryColor.darkPrimary} />
+            title: "Location",
+            description: "View and check your current location. Use this feature to ensure accurate navigation during trips.",
+            icon: () => <MaterialIcons name="location-on" size={30} color={primaryColor.darkPrimary} />,
         },
         {
             id: 3,
-            title: "Manage Posts",
-            description: "Go to 'Post Manage' to create, edit, or view posts related to your vehicles.",
-            icon: () => <MaterialIcons name="post-add" size={30} color={primaryColor.darkPrimary} />
+            title: "Activities",
+            description: "Track ongoing trips and view your trip history. This section helps you manage your completed and in-progress journeys.",
+            icon: () => <MaterialIcons name="history" size={30} color={primaryColor.darkPrimary} />,
         },
         {
             id: 4,
-            title: "Account Settings",
-            description: "Access 'Account' to manage your profile, change password, and update personal details.",
-            icon: () => <MaterialIcons name="account-circle" size={30} color={primaryColor.darkPrimary} />
+            title: "Account",
+            description: "Manage your account details, update personal information, or log out of the app.",
+            icon: () => <MaterialIcons name="account-circle" size={30} color={primaryColor.darkPrimary} />,
         },
     ];
 
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         position: "absolute",
         width: width,
         textAlign: "center",
-        zIndex: -999
+        zIndex: -999,
     },
     container: {
         flex: 1,

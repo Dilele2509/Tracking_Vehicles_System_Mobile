@@ -53,7 +53,7 @@ export default function SliderShow() {
         onPageSelected={onPageSelected}
       >
         {arrImg.map((image, index) => (
-          <TouchableOpacity
+          <View
             style={styles.btnSlider}
             key={index}
             onPress={() => {
@@ -65,7 +65,7 @@ export default function SliderShow() {
               source={image.uri}
               resizeMode="cover"
             />
-          </TouchableOpacity>
+          </View>
         ))}
       </PagerView>
     </View>

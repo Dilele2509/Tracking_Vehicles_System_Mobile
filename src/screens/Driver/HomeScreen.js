@@ -1,19 +1,14 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaView, FlatList, StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
-import { Categories, Header, VehicleList, SliderShow, MenuBar, CartNoti, SplashScreen } from "../../components";
+import { Categories, Header, SliderShow, MenuBar, SplashScreen } from "../../components";
 import GlobalStyles, { primaryColor } from "../../../assets/styles/GlobalStyles";
 import axios from "../../API/axios";
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { BASEURL } from '@env'
 
 function HomeScreen({ navigation }) {
-    const [vehicles, setVehicles] = useState([]);
     const [userInfo, setUserInfo] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-    const [hasResult, setHasResult] = useState(false);
-    const [searchResult, setSearchResult] = useState([]);
-    const [searchData, setSearchData] = useState('');
     const [isLoading, setIsLoading] = useState(false)
     const [isShowing, setIsShowing] = useState(false);
     const [quantNotification, setQuantNotification] = useState(0);
@@ -41,21 +36,7 @@ function HomeScreen({ navigation }) {
         return isShowing ? '750.000' : '*****';
     };
 
-    /* fetch all data about recent, product, cart length, user info */
     const fetchData = useCallback(() => {
-        setSearchData('')
-        axios.post('/vehicles/user-id')
-            .then((response) => {
-                if (Array.isArray(response.data)) {
-                    setVehicles(response.data);
-                } else {
-                    console.error('API response does not contain an array:', response.data);
-                }
-            })
-            .catch((error) => {
-                console.error('Error fetching vehicle data:', error);
-            });
-
         axios.get(`/user/get-info`)
             .then((response) => {
                 const userData = response.data;
@@ -79,25 +60,19 @@ function HomeScreen({ navigation }) {
             case 'slider':
                 return <SliderShow />;
             case 'categories':
-                return <Categories navigation={navigation} productAllList={vehicles} />;
+                return <Categories navigation={navigation} />;
             case 'dashboard':
                 return (
                     <View style={[GlobalStyles.padScreen20, GlobalStyles.mt10, styles.dashboard, { backgroundColor: primaryColor.whitePrimary }]}>
                         <View style={[GlobalStyles.flexRow, { alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }]}>
                             <TouchableOpacity
-                                onPress={ () => navigation.navigate('Account')}
+                                onPress={() => navigation.navigate('Account')}
                                 style={styles.accountContainer}>
                                 <Image style={styles.userAva} source={{ uri: `${BASEURL}${userInfo.avatar}` }} />
-                                {console.log(`${BASEURL}${userInfo.avatar}`)}
+                                {/* {console.log(`${BASEURL}${userInfo.avatar}`)} */}
                                 <View style={styles.userContent}>
                                     <Text style={[styles.userName]}>{userInfo.fullname}</Text>
                                 </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Feather name="bell" size={24} color={primaryColor.yellowPrimary} />
-                                {quantNotification > 0 && <View style={styles.bellNotifications}>
-                                    <Text style={[GlobalStyles.h6, styles.bellValue]}>{quantNotification}</Text>
-                                </View>}
                             </TouchableOpacity>
                         </View>
                         <View style={[GlobalStyles.flexRow, { alignItems: "center", justifyContent: "space-between" }]}>
@@ -115,19 +90,19 @@ function HomeScreen({ navigation }) {
                             style={[GlobalStyles.flexRow, GlobalStyles.pad10, GlobalStyles.mt15, { justifyContent: 'space-between' }]}>
                             <View style={[GlobalStyles.flex]}>
                                 <Text style={[GlobalStyles.h4, { color: primaryColor.greenPrimary, marginBottom: 5 }]}>92.4%</Text>
-                                <Text style={[GlobalStyles.h6, {  fontWeight: '500', color: primaryColor.blackPrimary }]}>
+                                <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.blackPrimary }]}>
                                     Acceptance
                                 </Text>
                             </View>
                             <View style={[GlobalStyles.flex]}>
                                 <Text style={[GlobalStyles.h4, { color: primaryColor.redPrimary, marginBottom: 5 }]}>7.6%</Text>
-                                <Text style={[GlobalStyles.h6, {  fontWeight: '500', color: primaryColor.blackPrimary }]}>
+                                <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.blackPrimary }]}>
                                     Cancellation
                                 </Text>
                             </View>
                             <View style={[GlobalStyles.flex]}>
                                 <Text style={[GlobalStyles.h4, { color: primaryColor.bluePrimary, marginBottom: 5 }]}>4.9/5</Text>
-                                <Text style={[GlobalStyles.h6, {  fontWeight: '500', color: primaryColor.blackPrimary }]}>
+                                <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.blackPrimary }]}>
                                     Rated
                                 </Text>
                             </View>
@@ -138,30 +113,30 @@ function HomeScreen({ navigation }) {
                             </Text>
                             <View style={[GlobalStyles.flexRow, styles.statisticToday, { justifyContent: 'space-between' }]}>
                                 <View style={styles.statisticTitle}>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         Number of trip
                                     </Text>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         Income
                                     </Text>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         Rated
                                     </Text>
                                 </View>
                                 <View style={styles.statisticValue}>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         1
                                     </Text>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         25.000 VND
                                     </Text>
-                                    <Text style={[GlobalStyles.h6, { fontWeight:'500', color: primaryColor.whitePrimary }]}>
+                                    <Text style={[GlobalStyles.h6, { fontWeight: '500', color: primaryColor.whitePrimary }]}>
                                         5/5
                                     </Text>
                                 </View>
                             </View>
                             <TouchableOpacity style={[styles.detailActivitiesBtn, GlobalStyles.h5]}>
-                                <Text style={{ textAlign: 'center', fontWeight:'500' }}>More details</Text>
+                                <Text style={{ textAlign: 'center', fontWeight: '500' }}>More details</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -191,44 +166,13 @@ function HomeScreen({ navigation }) {
                     setIsLoading={setIsLoading}
                     navigation={navigation}
                     userName={userInfo.fullname}
-                    setHasResult={setHasResult}
-                    searchResult={searchResult}
-                    setSearchResult={setSearchResult}
-                    searchData={searchData}
-                    setSearchData={setSearchData}
                 />
-                {hasResult && (
-                    <FlatList
-                        style={styles.viewSearchBox}
-                        data={searchResult}
-                        contentContainerStyle={{ paddingBottom: 20 }}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                onPress={() => navigation.navigate("Product", { id: String(item.id) })}
-                                key={item.id}
-                                style={styles.recentItem}
-                            >
-                                <View style={[styles.imgAre]}>
-                                    {item.deleted == 1 ? (<View style={[styles.disPro]}>
-                                        <Text style={[styles.disProText]}>Unavailable</Text>
-                                    </View>) : null}
-                                    <Image style={styles.recentImg} source={{ uri: `${BASEURL}${item.thumbnail}` }} />
-                                </View>
-                                <View style={[GlobalStyles.pad10, styles.recentContent]}>
-                                    <Text style={[GlobalStyles.h5]}>{item.vehicle_brand + ' ' + item.vehicle_line}</Text>
-                                </View>
-                            </TouchableOpacity>
-                        )}
-                    /* keyExtractor={item => item.id.toString()} */
-                    />
-                )}
-
                 <FlatList
                     style={[{ marginBottom: 35 }]}
                     data={sections}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
-                    contentContainerStyle={[styles.flatList, { paddingBottom: cartCount > 0 && 80 }]}
+                    contentContainerStyle={[styles.flatList]}
                 />
             </>)}
         </SafeAreaView>
@@ -313,79 +257,11 @@ const styles = StyleSheet.create({
     },
     safeArea: {
         flex: 1,
+        marginBottom: -35,
         backgroundColor: primaryColor.whitePrimary,
     },
     flatList: {
-        flexGrow: 1,
-        paddingBottom: 30,
-    },
-    viewSearchBox: {
-        backgroundColor: primaryColor.whitePrimary,
-        width: "90%",
-        minHeight: 60,
-        maxHeight: 250,
-        borderWidth: 1,
-        borderColor: primaryColor.blackPrimary,
-        borderRadius: 10,
-        position: "absolute",
-        top: 180,
-        left: "5%",
-        zIndex: 9999,
-        padding: 10,
-    },
-    recentItem: {
-        flexDirection: "row",
-        marginBottom: 10,
-        alignItems: "center", // Align items vertically
-    },
-    recentImg: {
-        width: 60,
-        height: 60,
-        resizeMode: "cover",
-    },
-    imgAre: {
-        width: 60,
-        height: 60,
-    },
-    disPro: {
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 9999,
-        backgroundColor: "rgba(0,0,0,.5)",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    disProText: {
-        fontWeight: "500",
-        color: primaryColor.whitePrimary,
-        fontSize: 10
-    },
-    recentContent: {
-        flex: 1,
-        flexDirection: "column",
-        height: 60,
-        justifyContent: "space-between",
-        backgroundColor: primaryColor.whitePrimary,
-        marginLeft: 10,
-        padding: 10,
-    },
-    textContent: {
-        marginTop: 5,
-        color: primaryColor.blackPrimary,
-        fontSize: 16,
-        fontWeight: "500",
-        textAlign: "center",
-    },
-    discountText: {
-        padding: 3,
-        alignSelf: "flex-start",
-        borderWidth: 1,
-        borderColor: "#C40C0C",
-        color: "#C40C0C",
-        fontSize: 12,
+        flexGrow: 1
     },
 });
 

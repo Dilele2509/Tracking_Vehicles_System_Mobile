@@ -21,6 +21,7 @@ import VehicleInfoScreen from '../screens/Driver/VehicleInfoScreen';
 import HowToUseScreen from '../screens/General/HowToUseScreen';
 import EditUserInfo from '../screens/General/Account/EditUserInfo';
 import EditSecurity from '../screens/General/Account/EditSecurity';
+import WalletScreen from '../screens/Driver/WalletManage/WalletScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,7 @@ function AppNavigator() {
                             ),
                         })}
                     />
+                    <Stack.Screen name="wallet" component={WalletScreen} />
                     <Stack.Screen name="VehicleInfo" component={VehicleInfoScreen} />
                     <Stack.Screen name="HowToUse" component={HowToUseScreen} />
                     <Stack.Screen name='EditUser' component={EditUserInfo}/>

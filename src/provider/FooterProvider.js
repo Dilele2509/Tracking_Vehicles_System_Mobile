@@ -13,10 +13,10 @@ export const FooterProvider = ({ children }) => {
             isSelected: true,
         },
         {
-            titleBtn: "Driving Mode",
-            iconBtn: "Ionicons",
-            iconBtnName: "car-sport-outline",
-            nextPage: "DrivingMode",
+            titleBtn: "Location",
+            iconBtn: "MaterialIcons",
+            iconBtnName: "share-location",
+            nextPage: "Location",
             isSelected: false,
         },
         {

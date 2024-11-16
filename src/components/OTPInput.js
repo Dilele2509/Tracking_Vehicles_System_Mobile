@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import GlobalStyles, { primaryColor } from "../../assets/styles/GlobalStyles";
 
-/* Tran Binh Phuoc do this task */
 function OTPInput(props) {
   const { length, value, disabled, onChange } = props;
   const inputRefs = useRef([]);

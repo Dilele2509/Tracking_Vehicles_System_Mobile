@@ -10,11 +10,11 @@ import SliderShow from "./SliderShow"
 import Categories from "./Categories"
 import MenuBar from "./menuBar"
 import CartView from "./CartView"
-import CartNoti from "./CartNoti"
 import AddCartBox from "./AddCartBox"
 import SplashScreen from "./SplashScreen"
 import AddressBox from "./AddressBox"
 import CustomTabBar from "./CustomTabBar"
+import HeaderTab from "./HeaderTab"
 
 
 export {
@@ -23,6 +23,7 @@ export {
     LineButton,
     FillButton,
     Header,
+    HeaderTab,
     InputBox,
     CheckBox,
     OTPInput,
@@ -31,7 +32,6 @@ export {
     Categories,
     MenuBar,
     CartView,
-    CartNoti,
     AddCartBox,
     AddressBox,
     SplashScreen

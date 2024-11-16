@@ -2,9 +2,16 @@ import { StyleSheet } from "react-native";
 
 // color constants
 export const primaryColor = {
+    beigePrimary: "#F6EFBD",
+    lightRed: '#FFE0E0',
+    darkRed: '#7D0A0A',
+    lightBeige: '#FEFAF1',
+    lightGreen: '#D8EFD3',
+    darkGreen: '#508D69',
     yellowPrimary: "#E9BD20",
     darkPrimary: "#3B3B3B",
     lightPrimary: "#FEF6E9",
+    greyPrimary: "#F1F1F1",
     whitePrimary: "#fffefd",
     blackPrimary: "#444",
     brownPrimary: "#C06014",

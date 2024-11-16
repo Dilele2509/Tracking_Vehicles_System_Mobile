@@ -1,13 +1,28 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions, Image, TextInput, Alert, ActivityIndicator } from "react-native";
+import { 
+    SafeAreaView, 
+    StyleSheet, 
+    Text, 
+    TouchableOpacity, 
+    View, 
+    Dimensions, 
+    Image, 
+    TextInput, 
+    Alert, 
+    KeyboardAvoidingView, 
+    Platform, 
+    Keyboard, 
+    TouchableWithoutFeedback 
+} from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useFocusEffect } from "@react-navigation/native";
 import GlobalStyles, { primaryColor } from "../../../../assets/styles/GlobalStyles";
-import axios from "../../../API/axios";  // Import the configured axios instance
+import axios from "../../../API/axios";
 import { FillButton, SplashScreen } from "../../../components";
-import * as ImagePicker from 'expo-image-picker';  // Import Expo Image Picker
-import { BASEURL } from '@env'
+import * as ImagePicker from 'expo-image-picker';
+import { BASEURL } from '@env';
 
 
 const { width } = Dimensions.get('window');
@@ -16,21 +31,18 @@ function EditUserInfo({ navigation, route }) {
     const { titlePage } = route.params;
     const [isEdit, setIsEdit] = useState(false);
     const [userInfo, setUserInfo] = useState([]);
-    const [isFocus, setIsFocus] = useState(false);
-    const [isChooseFile, setIsChooseFile] = useState(false)
-    const [image, setImage] = useState(null);  // State to hold selected image
+    const [focusedInput, setFocusedInput] = useState(null); // State for focused input
+    const [isChooseFile, setIsChooseFile] = useState(false);
+    const [image, setImage] = useState(null);
     const [updateInfo, setUpdateInfo] = useState({
         fullname: '',
         email: '',
         phone_number: '',
         birthday: '',
     });
-
-    const [isLoading, setIsLoading] = useState(false); // State to control loading state
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchData = useCallback(() => {
-        /* console.log("Current timezone:", Intl.DateTimeFormat().resolvedOptions().timeZone); */
-
         axios.get(`/user/get-info`)
             .then((response) => {
                 const userData = response.data;
@@ -40,8 +52,6 @@ function EditUserInfo({ navigation, route }) {
                 console.error('Error fetching user data:', error);
             });
     }, []);
-
-
 
     useEffect(() => {
         if (userInfo) {
@@ -60,13 +70,10 @@ function EditUserInfo({ navigation, route }) {
         }, [fetchData])
     );
 
-
     const handleSaveEdit = () => {
         setIsLoading(true);
-        /* console.log('birthday: ', updateInfo.birthday, ' birthday type: ', typeof (updateInfo.birthday)); */
         axios.put("/user/update-info", updateInfo)
             .then((response) => {
-                /* console.log(response.data); */
                 setIsEdit(!isEdit);
                 fetchData();
             })
@@ -103,7 +110,6 @@ function EditUserInfo({ navigation, route }) {
         setIsLoading(true);
         if (!image) return;
 
-        /* console.log(image); */
         const formData = new FormData();
         formData.append('avatar', {
             uri: image.uri,
@@ -117,7 +123,6 @@ function EditUserInfo({ navigation, route }) {
             }
         })
             .then((response) => {
-                /* console.log(response.data); */
                 fetchData();
                 setIsChooseFile(false);
             })
@@ -141,120 +146,123 @@ function EditUserInfo({ navigation, route }) {
     };
 
     return (
-        <SafeAreaView style={[{ flex: 1, backgroundColor: primaryColor.whitePrimary }]}>
-            {/* Splash screen while loading */}
-            <SplashScreen isLoading={isLoading} />
-            {/* Page content */}
-            {!isLoading && (
-                <>
-                    <View style={[GlobalStyles.padScreen20, styles.headerPage]}>
-                        <TouchableOpacity onPress={() => { navigation.goBack() }}>
-                            <AntDesign name="arrowleft" size={24} color={primaryColor.yellowPrimary} />
-                        </TouchableOpacity>
-                        <Text style={styles.titleText}>{titlePage}</Text>
-                    </View>
-                    <View style={[styles.contentContainer]}>
-                        <View style={[styles.avaArea, GlobalStyles.mb10]}>
-                            <TouchableOpacity style={styles.changeAva} onPress={handleChooseFile}>
-                                <Image
-                                    style={styles.userAva}
-                                    source={{ uri: image ? image.uri : `${BASEURL}${userInfo.avatar}` }}
-                                />
-                                <Feather name='camera' size={18} style={styles.avaIcon} color={primaryColor.whitePrimary} />
-                            </TouchableOpacity>
-
-                            {isChooseFile ? (
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <TouchableOpacity
-                                        onPress={() => setIsChooseFile(false)}
-                                        style={[styles.saveAvaBtn, { marginRight: 25, backgroundColor: primaryColor.redPrimary }]}>
-                                        <Text style={{ color: primaryColor.whitePrimary, fontWeight: "500" }}>Cancel</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={handleSaveAva}
-                                        style={[styles.saveAvaBtn]}>
-                                        <Text style={{ color: primaryColor.whitePrimary, fontWeight: "500" }}>Save</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ) : null}
-
-                            {isEdit ? (
-                                <TextInput
-                                    style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, isFocus && styles.inputFocus]}
-                                    value={updateInfo.fullname}
-                                    onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, fullname: text }))}
-                                    onFocus={() => setIsFocus(true)}
-                                    onBlur={() => setIsFocus(false)}
-                                />
-                            ) : (
-                                <Text style={[GlobalStyles.h3, GlobalStyles.mt10, { width: "80%" }]}>{userInfo.fullname}</Text>
-                            )}
-                        </View>
-                        <View style={[styles.InfoArea]}>
-                            <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
-                                <Text style={[GlobalStyles.h5, { color: primaryColor.yellowPrimary, marginRight: 10 }]}>Email: </Text>
-                                {isEdit ? (
-                                    <TextInput
-                                        style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, isFocus && styles.inputFocus]}
-                                        value={updateInfo.email}
-                                        onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, email: text }))}
-                                        onFocus={() => setIsFocus(true)}
-                                        onBlur={() => setIsFocus(false)}
-                                    />
-                                ) : (
-                                    <Text style={{ width: "80%" }}>{userInfo.email}</Text>
-                                )}
-                            </View>
-                            <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
-                                <Text style={[GlobalStyles.h5, { color: primaryColor.yellowPrimary, marginRight: 10 }]}>Phone number: </Text>
-                                {isEdit ? (
-                                    <TextInput
-                                        style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, isFocus && styles.inputFocus]}
-                                        value={updateInfo.phone_number}
-                                        onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, phone_number: text }))}
-                                        onFocus={() => setIsFocus(true)}
-                                        onBlur={() => setIsFocus(false)}
-                                    />
-                                ) : (
-                                    <Text style={{ width: "80%" }}>{userInfo.phone_number}</Text>
-                                )}
-                            </View>
-                            <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
-                                <Text style={[GlobalStyles.h5, { color: primaryColor.yellowPrimary, marginRight: 10 }]}>Day of Birth: </Text>
-                                {isEdit ? (
-                                    <DateTimePicker
-                                        value={new Date(updateInfo.birthday || Date.now())}
-                                        mode="date"
-                                        display="default"
-                                        onChange={handleBirthdayChange}
-                                    />
-
-                                ) : (
-                                    userInfo.birthday ? (
-                                        <Text style={{ width: "80%" }}>{userInfo.birthday}</Text>
-                                    ) : (
-                                        <Text style={{ width: "80%", color: "#888888" }}>Have no update</Text>
-                                    )
-                                )}
-                            </View>
-                        </View>
-                    </View>
-                    {!isEdit ? (
-                        <View style={{ alignItems: "center" }}>
-                            <FillButton onPress={() => setIsEdit(true)} color={primaryColor.whitePrimary} backgroundColor={primaryColor.yellowPrimary} text="Edit Information" />
-                        </View>
-                    ) : (
+        <KeyboardAwareScrollView
+            style={{ flex: 1, backgroundColor: primaryColor.whitePrimary }}
+            contentContainerStyle={{ flexGrow: 1 }}
+            enableOnAndroid={true}
+            extraScrollHeight={Platform.OS === "android" ? 50 : 0}
+        >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={[{ flex: 1, backgroundColor: primaryColor.whitePrimary }]}>
+                    <SplashScreen isLoading={isLoading} />
+                    {!isLoading && (
                         <>
-                            <View style={{ alignItems: "center" }}>
-                                <FillButton onPress={handleSaveEdit} color={primaryColor.whitePrimary} backgroundColor={primaryColor.yellowPrimary} text="Save Edit" />
+                            <View style={[GlobalStyles.padScreen20, styles.headerPage]}>
+                                <TouchableOpacity onPress={() => { navigation.goBack() }}>
+                                    <AntDesign name="arrowleft" size={24} color={primaryColor.yellowPrimary} />
+                                </TouchableOpacity>
+                                <Text style={styles.titleText}>{titlePage}</Text>
                             </View>
-                            <View style={{ alignItems: "center", marginTop: 20 }}>
-                                <FillButton onPress={() => setIsEdit(false)} color={primaryColor.whitePrimary} backgroundColor={primaryColor.redPrimary} text="Cancel Edit" />
+                            <View style={[styles.contentContainer]}>
+                                <View style={[styles.avaArea, GlobalStyles.mb10]}>
+                                    <TouchableOpacity style={styles.changeAva} onPress={handleChooseFile}>
+                                        <Image
+                                            style={styles.userAva}
+                                            source={{ uri: image ? image.uri : `${BASEURL}${userInfo.avatar}` }}
+                                        />
+                                        <Feather name='camera' size={18} style={styles.avaIcon} color={primaryColor.whitePrimary} />
+                                    </TouchableOpacity>
+
+                                    {isChooseFile && (
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <TouchableOpacity
+                                                onPress={() => setIsChooseFile(false)}
+                                                style={[styles.saveAvaBtn, { marginRight: 25, backgroundColor: primaryColor.redPrimary }]}>
+                                                <Text style={{ color: primaryColor.whitePrimary, fontWeight: "500" }}>Cancel</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={handleSaveAva}
+                                                style={[styles.saveAvaBtn]}>
+                                                <Text style={{ color: primaryColor.whitePrimary, fontWeight: "500" }}>Save</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
+
+                                    {isEdit ? (
+                                        <TextInput
+                                            style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, focusedInput === "fullname" && styles.inputFocus]}
+                                            value={updateInfo.fullname}
+                                            onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, fullname: text }))}
+                                            onFocus={() => setFocusedInput("fullname")}
+                                            onBlur={() => setFocusedInput(null)}
+                                        />
+                                    ) : (
+                                        <Text style={[GlobalStyles.h3, GlobalStyles.mt10, { width: "80%" }]}>{userInfo.fullname}</Text>
+                                    )}
+                                </View>
+                                <View style={[styles.InfoArea]}>
+                                    <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
+                                        <Text style={[GlobalStyles.h5, { color: primaryColor.darkPrimary, marginRight: 10 }]}>Email: </Text>
+                                        {isEdit ? (
+                                            <TextInput
+                                                style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, focusedInput === "email" && styles.inputFocus]}
+                                                value={updateInfo.email}
+                                                onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, email: text }))}
+                                                onFocus={() => setFocusedInput("email")}
+                                                onBlur={() => setFocusedInput(null)}
+                                            />
+                                        ) : (
+                                            <Text style={{ width: "80%" }}>{userInfo.email}</Text>
+                                        )}
+                                    </View>
+                                    <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
+                                        <Text style={[GlobalStyles.h5, { color: primaryColor.darkPrimary, marginRight: 10 }]}>Phone number: </Text>
+                                        {isEdit ? (
+                                            <TextInput
+                                                style={[styles.inputStyle, styles.mt15, GlobalStyles.alightSelfCenter, focusedInput === "phone_number" && styles.inputFocus]}
+                                                value={updateInfo.phone_number}
+                                                onChangeText={(text) => setUpdateInfo(prevState => ({ ...prevState, phone_number: text }))}
+                                                onFocus={() => setFocusedInput("phone_number")}
+                                                onBlur={() => setFocusedInput(null)}
+                                            />
+                                        ) : (
+                                            <Text style={{ width: "80%" }}>{userInfo.phone_number}</Text>
+                                        )}
+                                    </View>
+                                    <View style={[{ flexDirection: "row", alignItems: "center" }, GlobalStyles.mb10]}>
+                                        <Text style={[GlobalStyles.h5, { color: primaryColor.darkPrimary, marginRight: 10 }]}>Day of Birth: </Text>
+                                        {isEdit ? (
+                                            <DateTimePicker
+                                                value={new Date(updateInfo.birthday)}
+                                                mode="date"
+                                                display="default"
+                                                onChange={handleBirthdayChange}
+                                            />
+                                        ) : (
+                                            <Text style={{ width: "80%" }}>{new Date(userInfo.birthday).toLocaleDateString()}</Text>
+                                        )}
+                                    </View>
+                                </View>
                             </View>
+                            {!isEdit ? (
+                                <View style={{ alignItems: "center" }}>
+                                    <FillButton onPress={() => setIsEdit(true)} color={primaryColor.whitePrimary} backgroundColor={primaryColor.yellowPrimary} text="Edit Information" />
+                                </View>
+                            ) : (
+                                <>
+                                    <View style={{ alignItems: "center" }}>
+                                        <FillButton onPress={handleSaveEdit} color={primaryColor.whitePrimary} backgroundColor={primaryColor.bluePrimary} text="Save Edit" />
+                                    </View>
+                                    <View style={{ alignItems: "center", marginTop: 20 }}>
+                                        <FillButton onPress={() => setIsEdit(false)} color={primaryColor.darkPrimary} backgroundColor={primaryColor.greyPrimary} text="Cancel Edit" />
+                                    </View>
+                                </>
+                            )}
                         </>
                     )}
-                </>)}
-        </SafeAreaView>
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
     );
 }
 

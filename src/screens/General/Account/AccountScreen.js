@@ -64,11 +64,13 @@ const AccountScreen = ({ navigation }) => {
   return (
     <View style={[styles.container, { backgroundColor: primaryColor.whitePrimary }]}>
       <View style={styles.headerContainer}>
-        <Image style={styles.headerImg} source={require("../../../../assets/Images/main-banner.png")} />
+        <Image style={styles.headerImg} source={require("../../../../assets/Images/main-background.png")} />
         <View style={styles.userContainer}>
           <Image style={styles.userAva} source={{ uri: `${BASEURL}${userInfo.avatar}` }} />
           <View style={styles.userContent}>
-            <Text style={[styles.userName]}>{userInfo.fullname}</Text>
+            <Text style={styles.userName} numberOfLines={2} ellipsizeMode="tail">
+              {userInfo.fullname}
+            </Text>
           </View>
         </View>
       </View>
@@ -140,7 +142,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     marginTop: -75, // Adjust this value based on layout
     marginLeft: 15,
-    borderWidth: 5,
+    borderWidth: 4,
     backgroundColor: '#FFFFFF',
     borderColor: primaryColor.whitePrimary,
     zIndex: 1
@@ -156,9 +158,12 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   userName: {
-    fontSize: 28,
-    marginHorizontal: 20,
+    marginTop: 5,
+    fontSize: 18,
+    marginLeft: 10,
     fontWeight: "500",
-    color: primaryColor.blackPrimary
-  },
+    color: primaryColor.blackPrimary,
+    flexShrink: 1,       // Allow text to shrink if needed
+    flexWrap: 'wrap'     // Ensure text wraps to the next line
+  }
 });
