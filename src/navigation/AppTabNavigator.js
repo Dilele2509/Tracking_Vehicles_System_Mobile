@@ -3,43 +3,51 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from '../screens/Driver/HomeScreen';
 import LocationScreen from '../screens/Driver/LocationScreen';
-import ActivityDetails from '../screens/Driver/ActivitiesManage/ActivityDetails';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { primaryColor } from '../../assets/styles/GlobalStyles';
 import { CustomTabBar, HeaderTab } from '../components';
 import AccountScreen from '../screens/General/Account/AccountScreen';
 import ActivitiesScreen from '../screens/Driver/ActivitiesManage/ActivitiesScreen';
+import ActivityDetails from '../screens/Driver/ActivitiesManage/ActivityDetails';
+import { AntDesign } from '@expo/vector-icons';
+import HistoryDetails from '../screens/Driver/ActivitiesManage/HistoryDetails';
 // Create the tab navigator
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function ActivitiesStack() {
     return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name="Activities"
-                component={ActivitiesScreen}
-                options={() => ({
-                    headerShown: false, 
-                })}
-            />
-
-            <Stack.Screen
-                name="Create Post"
-                component={ActivityDetails}
-                options={({ navigation }) => ({
-                    animationEnabled: true,
-                    presentation: 'modal', // Sử dụng modal cho hiệu ứng slide-up
-                    headerRight: () => (
-                        <TouchableOpacity onPress={() => navigation.goBack()}>
-                            <Text style={{ marginRight: 10, color: primaryColor.bluePrimary }}>Cancel</Text>
-                        </TouchableOpacity>
-                    ),
-                })}
-            />
-        </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Activities"
+          component={ActivitiesScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Activity Details"
+          component={ActivityDetails}
+          options={({ navigation }) => ({
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <AntDesign name="left" size={22} color={primaryColor.yellowPrimary} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="History Trip"
+          component={HistoryDetails}
+          options={({ navigation }) => ({
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <AntDesign name="left" size={22} color={primaryColor.yellowPrimary} />
+              </TouchableOpacity>
+            ),
+          })}
+        />
+      </Stack.Navigator>
     );
-}
+  }
 
 function AppTabNavigator() {
     return (

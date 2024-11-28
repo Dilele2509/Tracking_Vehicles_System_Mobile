@@ -1,46 +1,73 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
 import GlobalStyles, { primaryColor } from '../../../../assets/styles/GlobalStyles'
 import { TouchableOpacity } from 'react-native'
 import { FontAwesome6 } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
+import axios from '../../../API/axios'
 
-function OnGoingAct() {
-  const activities = 
-      {
-        id: 1,
-        time: '08:20PM',
-        address: 'Ton Duc Thang University, Gate 7',
-        status: 'OnGoing',
-        date: '07/11/2024',
-      }
+function OnGoingAct(props) {
+  const {navigation} = props
+  const [ trip, setTrip] = useState({})
+
+  const fetchData = useCallback(() => {
+    axios.get('/trip/trip-ongoing-list')
+      .then((response) => {
+        setTrip(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching trips data:', error);
+      });
+  }, []);
+
+  /* call back when focus screen */
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [fetchData])
+  );
+
   return (
     <View style={styles.container}>
-      {activities !== null ? (
-        <TouchableOpacity id={activities.id} style={styles.actItem}>
+      {trip ? (
+        <TouchableOpacity
+          onPress={()=> navigation.navigate('Activity Details', {id: trip.id})}
+          style={styles.actItem}
+        >
           <View style={styles.actInfo}>
-            <Text>{activities.date} . {activities.time}</Text>
-            <Text style={styles.actStatus}>{activities.status}</Text>
+            <Text>{trip.date} . {trip.timeOrdered}</Text>
+            <Text style={styles.actStatus}>{trip.status}</Text>
           </View>
           <View style={styles.actAddress}>
-            <FontAwesome6 name='location-dot' size={24} color={primaryColor.redPrimary} />
-            <Text style={[GlobalStyles.h4, { fontWeight: '500' }]}>{activities.address}</Text>
+            <FontAwesome6
+              name="location-dot"
+              size={24}
+              color={primaryColor.redPrimary}
+            />
+            <Text style={[GlobalStyles.h4, { fontWeight: '500' }]}>
+              {trip.to}
+            </Text>
           </View>
         </TouchableOpacity>
       ) : (
-        <>
-          <View>
-            <View style={styles.imgArea}>
-              <Image style={styles.noActImg} source={require('../../../../assets/Images/car.png')} />
-            </View>
-            <Text style={[GlobalStyles.h4, { fontWeight: '500', textAlign:'center' }]}>Oops! No OnGoing Activities</Text>
+        <View>
+          <View style={styles.imgArea}>
+            <Image
+              style={styles.noActImg}
+              source={require('../../../../assets/Images/car.png')}
+            />
           </View>
-        </>
+          <Text style={[GlobalStyles.h4, { fontWeight: '500', textAlign: 'center' }]}>
+            Oops! No OnGoing Activities
+          </Text>
+        </View>
       )}
     </View>
-  )
+  );
 }
 
-export default OnGoingAct
+export default OnGoingAct;
 
 const styles = StyleSheet.create({
   container: {
@@ -57,7 +84,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     width: '90%',
-    height: 90
+    height: 90,
+    paddingRight: 10
   },
   actInfo: {
     display: 'flex',
@@ -91,7 +119,7 @@ const styles = StyleSheet.create({
   },
   noActImg: {
     width: 250,
-    height: 200, 
+    height: 200,
     resizeMode: 'contain',
   },
 })

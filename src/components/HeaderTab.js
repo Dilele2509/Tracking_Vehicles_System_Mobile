@@ -5,7 +5,6 @@ import {
     StyleSheet,
     Animated,
     TouchableOpacity,
-    SafeAreaView,
 } from 'react-native';
 import { useFocusEffect } from "@react-navigation/native";
 import { primaryColor } from '../../assets/styles/GlobalStyles';

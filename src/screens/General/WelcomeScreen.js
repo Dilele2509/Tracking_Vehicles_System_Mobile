@@ -1,5 +1,6 @@
 import React from "react";//-
-import { StyleSheet, ImageBackground, Animated, Text, TouchableOpacity, SafeAreaView } from "react-native";//-
+import { StyleSheet, ImageBackground, Animated, Text, TouchableOpacity } from "react-native";//-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles, { primaryColor } from "../../../assets/styles/GlobalStyles";//-
 import { FillButton, AppLogo } from '../../components';//-
 import { useState, useEffect } from "react";//-

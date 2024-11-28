@@ -1,54 +1,90 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { TouchableOpacity } from 'react-native';
 import { StyleSheet, Text, View } from 'react-native';
 import { primaryColor } from '../../../../assets/styles/GlobalStyles';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../../API/axios';
+import { MoneyFormat } from '../../../components';
 
 export default function WalletStatistic() {
     const [chosen, setChosen] = useState('date');
-    const [trips, setTrips] = useState(2);
-    const [income, setIncome] = useState('45000');
-    const [violate, setViolate] = useState(1);
-    const [rated, setRated] = useState(4);
-    const [pickerValue, setPickerValue] = useState();
+    const [pickerValue, setPickerValue] = useState(new Date()); // Initialize with the current date
+    const [statisticData, setStatisticData] = useState({});
 
     useEffect(() => {
-        let newDate = new Date();
-        setPickerValue(newDate);
+        setPickerValue(new Date()); // Ensure it's a valid Date object on component mount
     }, []);
 
-    // Kiểm tra nếu nút "right" nên bị vô hiệu hóa
+    const fetchData = useCallback(() => {
+        if (!pickerValue || !(pickerValue instanceof Date)) {
+            console.error("Invalid picker value.");
+            return;
+        }
+        const month = new Date(pickerValue).toLocaleString('default', { month: 'numeric' });
+        const year = new Date(pickerValue).toLocaleString('default', { year: 'numeric' });
+        const dateValue = pickerValue.toISOString().split('T')[0]; 
+
+        switch (chosen) {
+            case 'date':
+                axios.post('/income/date-driver', { date: dateValue })
+                    .then((response) => {
+                        setStatisticData(response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching balance data:', error);
+                    });
+                break;
+            case 'month':
+                axios.post('/income/month-driver', { year: year, month: month })
+                    .then((response) => {
+                        setStatisticData(response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching balance data:', error);
+                    });
+                break;
+            case 'year':
+                axios.post('/income/year-driver', { year: year })
+                    .then((response) => {
+                        setStatisticData(response.data);
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching balance data:', error);
+                    });
+                break;
+            default:
+                break;
+        }
+    }, [pickerValue]);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchData();
+        }, [fetchData])
+    );
+
     const isRightButtonDisabled = () => {
         const today = new Date();
-
         if (chosen === 'date') {
             const selectedDate = new Date(pickerValue);
-            return (
-                selectedDate.getDate() === today.getDate() &&
+            return selectedDate.getDate() === today.getDate() &&
                 selectedDate.getMonth() === today.getMonth() &&
-                selectedDate.getFullYear() === today.getFullYear()
-            );
+                selectedDate.getFullYear() === today.getFullYear();
         } else if (chosen === 'month') {
             const selectedMonth = new Date(pickerValue);
-            return (
-                selectedMonth.getMonth() >= today.getMonth() &&
-                selectedMonth.getFullYear() >= today.getFullYear()
-            );
+            return selectedMonth.getMonth() >= today.getMonth() &&
+                selectedMonth.getFullYear() >= today.getFullYear();
         } else if (chosen === 'year') {
             const selectedYear = new Date(pickerValue);
-            // So sánh năm đã chọn với năm hiện tại
             return selectedYear.getFullYear() >= today.getFullYear();
         }
-
         return false;
     };
 
-
-
     const generateDate = (date) => {
         let newDate = new Date();
-
         if (!(date instanceof Date)) {
             date = new Date(date); // Ensure `date` is a valid Date object
         }
@@ -74,10 +110,8 @@ export default function WalletStatistic() {
         }
     };
 
-
     const handleDateChange = (direction) => {
         let newValue = new Date(pickerValue);
-
         if (chosen === 'date') {
             newValue.setDate(newValue.getDate() + (direction === 'next' ? 1 : -1));
         } else if (chosen === 'month') {
@@ -85,11 +119,9 @@ export default function WalletStatistic() {
         } else if (chosen === 'year') {
             newValue.setFullYear(newValue.getFullYear() + (direction === 'next' ? 1 : -1));
         }
-
         setPickerValue(newValue);
     };
 
-    // Khi thay đổi lựa chọn ngày, tháng, năm
     const handleChoice = (choice) => {
         setChosen(choice);
 
@@ -113,7 +145,6 @@ export default function WalletStatistic() {
                 break;
         }
     };
-
 
     return (
         <View style={styles.contentArea}>
@@ -143,7 +174,7 @@ export default function WalletStatistic() {
             </View>
 
             <View style={styles.statisticArea}>
-                <Text style={styles.statisticTitle}>Statistics by <Text style={{textTransform:'uppercase', color:primaryColor.darkRed}}>{chosen}</Text></Text>
+                <Text style={styles.statisticTitle}>Statistics by <Text style={{ textTransform: 'uppercase', color: primaryColor.darkRed }}>{chosen}</Text></Text>
                 <View style={styles.dateTimePicker}>
                     <TouchableOpacity onPress={() => handleDateChange('previous')}>
                         <AntDesign name="left" size={24} color={primaryColor.darkPrimary} />
@@ -166,19 +197,21 @@ export default function WalletStatistic() {
                 <View style={styles.statisticItems}>
                     <View style={styles.statisticItem}>
                         <Text style={styles.statisticLabel}>Trips:</Text>
-                        <Text style={styles.statisticValue}>{trips}</Text>
+                        <Text style={styles.statisticValue}>{statisticData.trips ?? 'No Data'}</Text>
                     </View>
                     <View style={styles.statisticItem}>
                         <Text style={styles.statisticLabel}>Income:</Text>
-                        <Text style={styles.statisticValue}>{income} VND</Text>
+                        <Text style={styles.statisticValue}>
+                            {statisticData.average_income ? <MoneyFormat value={statisticData.average_income} isShowing={true} /> : 'No Data'}
+                        </Text>
                     </View>
                     <View style={styles.statisticItem}>
                         <Text style={styles.statisticLabel}>Violates:</Text>
-                        <Text style={styles.statisticValue}>{violate}</Text>
+                        <Text style={styles.statisticValue}>{statisticData.violates ?? 'No Data'}</Text>
                     </View>
                     <View style={styles.statisticItem}>
                         <Text style={styles.statisticLabel}>Rated:</Text>
-                        <Text style={styles.statisticValue}>{rated}/5</Text>
+                        <Text style={styles.statisticValue}>{statisticData.average_rate ? `${statisticData.average_rate}/5` : 'No Data'}</Text>
                     </View>
                 </View>
             </View>

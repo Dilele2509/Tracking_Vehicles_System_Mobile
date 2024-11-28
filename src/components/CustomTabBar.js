@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { StyleSheet, View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { FooterContext } from "../provider/FooterProvider";
 import { MaterialCommunityIcons, Feather, AntDesign, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { primaryColor } from "../../assets/styles/GlobalStyles";
@@ -53,6 +54,7 @@ function CustomTabBar({ navigation }) {
 
 const styles = StyleSheet.create({
     safeArea: {
+        paddingTop: -50,
         backgroundColor: primaryColor.whitePrimary,
     },
     container: {

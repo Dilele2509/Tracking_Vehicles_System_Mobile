@@ -1,35 +1,37 @@
-import React, { useState, useCallback, useRef, useMemo, Children } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import GlobalStyles, { primaryColor } from '../../../../assets/styles/GlobalStyles';
-import axios from '../../../API/axios';
-import { BASEURL } from '@env';
-import { HeaderTab } from '../../../components';
+import React, { useState, useMemo } from 'react';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { HeaderTab } from '../../../components'; // Assuming HeaderTab is properly implemented
 import OnGoingAct from './OnGoingAct';
 import HistoryAct from './HistoryAct';
+import GlobalStyles, { primaryColor } from '../../../../assets/styles/GlobalStyles';
+import { TouchableOpacity } from 'react-native';
 
-const ActivitiesScreen = () => {
+const ActivitiesScreen = ({navigation}) => {
   const tab1 = 'OnGoing';
   const tab2 = 'History';
-  const [currentTab, setCurrentTab] = useState(tab1)
+
+  const [currentTab, setCurrentTab] = useState(tab1);
+
+  // Memoizing tab content for performance optimization
+  const renderContent = useMemo(() => {
+    switch (currentTab) {
+      case tab1:
+        return <OnGoingAct navigation={navigation} />;
+      case tab2:
+        return <HistoryAct navigation={navigation}/>;
+      default:
+        return null;
+    }
+  }, [currentTab]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Activities</Text>
         <HeaderTab tab1={tab1} tab2={tab2} setCurrentTab={setCurrentTab} />
       </View>
-      
-      {currentTab === tab1 ? (
-        <OnGoingAct />
-      ) : (
-        <HistoryAct />
-      )}
+
+      {renderContent}
     </SafeAreaView>
   );
 };

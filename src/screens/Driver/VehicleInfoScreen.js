@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Dimensions } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles, { primaryColor } from '../../../assets/styles/GlobalStyles';
 import { AntDesign } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
@@ -39,6 +40,7 @@ export default function DeviceShopScreen({ navigation }) {
             <View style={[styles.vehicleInfoContent]}>
                 <View>
                     <Image style={styles.vehicleImg} source={{ uri: `${BASEURL}${vehicles.thumbnail}` }} />
+                    {console.log(`${BASEURL}${vehicles.thumbnail}`)}
                 </View>
                 <View style={styles.vehicleInfo}>
                     {/* Tiêu đề Xe */}
@@ -58,11 +60,11 @@ export default function DeviceShopScreen({ navigation }) {
                     </View>
                     <View style={styles.infoSection}>
                         <Text style={styles.vehicleDetailLabel}>Km per day:</Text>
-                        <Text style={styles.vehicleDetailValue}>{vehicles.km_per_day} Km</Text>
+                        <Text style={styles.vehicleDetailValue}>{vehicles.km_per_day ?? 0} Km</Text>
                     </View>
                     <View style={styles.infoSection}>
                         <Text style={styles.vehicleDetailLabel}>Parked time:</Text>
-                        <Text style={styles.vehicleDetailValue}>{vehicles.parked_time}</Text>
+                        <Text style={styles.vehicleDetailValue}>{vehicles.parked_time ?? '00:00:00'}</Text>
                     </View>
 
                     {/* Trạng thái và ID thiết bị */}

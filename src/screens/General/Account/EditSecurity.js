@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Dimensions, Image, TextInput, Alert } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View, Dimensions, Image, TextInput, Alert } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
 import GlobalStyles, { primaryColor } from "../../../../assets/styles/GlobalStyles";
 import axios from "../../../API/axios";

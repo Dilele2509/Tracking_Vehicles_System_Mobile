@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   FlatList,
   Text,
@@ -9,49 +9,59 @@ import {
 } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import GlobalStyles, { primaryColor } from '../../../../assets/styles/GlobalStyles';
+import { useFocusEffect } from '@react-navigation/native';
+import axios from '../../../API/axios';
 
-function HistoryAct() {
-  const hisList = [
-    {
-      id: 1,
-      time: '06:17PM',
-      address: 'University Of Technology and Education, Main Gate',
-      status: 'Completed',
-      date: '07/11/2024',
-    },
-    {
-      id: 2,
-      time: '08:35PM',
-      address: 'Ton Duc Thang University, Gate 7',
-      status: 'Cancelled',
-      date: '27/10/2024',
-    },
-  ];
+function HistoryAct(props) {
+  const { navigation } = props;
+  const [ trip, setTrip] = useState({})
+
+  const fetchData = useCallback(() => {
+    axios.get('/trip/trip-complete-list')
+      .then((response) => {
+        setTrip(response.data);
+        /* console.log(response.data); */
+      })
+      .catch((error) => {
+        console.error('Error fetching trips data:', error);
+      });
+  }, []);
+
+  /* call back when focus screen */
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [fetchData])
+  );
 
   // Function to render each item
   const renderItem = ({ item }) => (
-    <TouchableOpacity key={item.id} style={styles.actItem}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('History Trip', { id: item.id })}
+      key={item.id}
+      style={styles.actItem}>
       <View style={styles.actInfo}>
-        <Text>{item.date} . {item.time}</Text>
+        <Text>{item.date} . {item.timeOrdered}</Text>
         <Text style={[styles.actStatus, {
-          backgroundColor: item.status === 'Completed' ? primaryColor.lightGreen:primaryColor.lightRed,
-          color: item.status === 'Completed' ? primaryColor.darkGreen : primaryColor.darkRed}]}>{item.status}</Text>
+          backgroundColor: item.status === 'Completed' ? primaryColor.lightGreen : primaryColor.lightRed,
+          color: item.status === 'Completed' ? primaryColor.darkGreen : primaryColor.darkRed
+        }]}>{item.status}</Text>
       </View>
       <View style={styles.actAddress}>
         <FontAwesome6 name="location-dot" size={24} color={primaryColor.redPrimary} />
-        <Text style={[GlobalStyles.h4, { fontWeight: '500' }]}>{item.address}</Text>
+        <Text style={[GlobalStyles.h4, { fontWeight: '500' }]}>{item.to}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      {hisList.length > 0 ? (
+      {trip.length > 0 ? (
         <FlatList
           style={styles.flatListStyle}
-          data={hisList}
+          data={trip}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatList}
         />
       ) : (
@@ -102,6 +112,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 90,
     marginBottom: 10,
+    paddingRight: 10
   },
   actInfo: {
     display: 'flex',
@@ -110,7 +121,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  
+
   },
   actAddress: {
     display: 'flex',

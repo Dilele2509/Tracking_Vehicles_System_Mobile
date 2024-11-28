@@ -54,6 +54,7 @@ function LicenseScreen({ navigation }) {
                                     source={{ uri: `${BASEURL}${licenseInfo.id_card_photo}` }}
                                     style={styles.driverImg}
                                 />
+                                {console.log(`${BASEURL}${licenseInfo.id_card_photo}`)}
                                 <Text style={{fontSize: 12}}>Class: <Text style={{fontWeight: '500'}}>{licenseInfo.license_class}</Text></Text>
                             </View>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Alert, SafeAreaView } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import GlobalStyles, { primaryColor } from "../../../assets/styles/GlobalStyles";
 import FillButton from "../../components/FillButton"; // Assuming you have this component
 import OTPInput from "../../components/OTPInput";

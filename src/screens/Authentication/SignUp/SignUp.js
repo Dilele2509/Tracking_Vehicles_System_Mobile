@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GlobalStyles, { primaryColor } from "../../../../assets/styles/GlobalStyles";
-import { Alert, Keyboard, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, Platform, TouchableWithoutFeedback } from "react-native";
+import { Alert, Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from '../../../API/axios'
 import { InputBox, CheckBox, FillButton } from "../../../components";
 

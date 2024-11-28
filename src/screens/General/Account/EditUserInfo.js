@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { 
-    SafeAreaView, 
     StyleSheet, 
     Text, 
     TouchableOpacity, 
@@ -14,6 +13,7 @@ import {
     Keyboard, 
     TouchableWithoutFeedback 
 } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { AntDesign, Feather } from '@expo/vector-icons';
@@ -170,6 +170,7 @@ function EditUserInfo({ navigation, route }) {
                                             style={styles.userAva}
                                             source={{ uri: image ? image.uri : `${BASEURL}${userInfo.avatar}` }}
                                         />
+                                        {console.log(`${BASEURL}${userInfo.avatar}`)}
                                         <Feather name='camera' size={18} style={styles.avaIcon} color={primaryColor.whitePrimary} />
                                     </TouchableOpacity>
 

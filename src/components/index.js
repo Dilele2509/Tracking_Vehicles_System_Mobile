@@ -15,6 +15,8 @@ import SplashScreen from "./SplashScreen"
 import AddressBox from "./AddressBox"
 import CustomTabBar from "./CustomTabBar"
 import HeaderTab from "./HeaderTab"
+import RatingStars from "./RatingStar"
+import MoneyFormat from "./MoneyFormat"
 
 
 export {
@@ -34,5 +36,7 @@ export {
     CartView,
     AddCartBox,
     AddressBox,
-    SplashScreen
+    SplashScreen,
+    RatingStars,
+    MoneyFormat
 }

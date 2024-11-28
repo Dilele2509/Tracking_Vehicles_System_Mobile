@@ -67,6 +67,7 @@ const AccountScreen = ({ navigation }) => {
         <Image style={styles.headerImg} source={require("../../../../assets/Images/main-background.png")} />
         <View style={styles.userContainer}>
           <Image style={styles.userAva} source={{ uri: `${BASEURL}${userInfo.avatar}` }} />
+          {/* {console.log(`${BASEURL}${userInfo.avatar}`)} */}
           <View style={styles.userContent}>
             <Text style={styles.userName} numberOfLines={2} ellipsizeMode="tail">
               {userInfo.fullname}

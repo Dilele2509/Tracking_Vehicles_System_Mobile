@@ -1,6 +1,7 @@
 import React from 'react';
 import GlobalStyles, { primaryColor } from '../../../assets/styles/GlobalStyles';
-import { View, Text, Image, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');

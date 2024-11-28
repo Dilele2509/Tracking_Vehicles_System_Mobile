@@ -4,10 +4,10 @@ import {
     Text,
     TouchableOpacity,
     Image,
-    SafeAreaView,
     Alert,
     ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { InputBox, SplashScreen } from '../../components';
 import * as ImagePicker from 'expo-image-picker';
