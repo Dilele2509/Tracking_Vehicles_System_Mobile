@@ -42,7 +42,7 @@ const AccountScreen = ({ navigation }) => {
         {
           text: 'Yes',
           onPress: () => {
-            axios.post("/login/logout") // Ensure the URL is correct
+            axios.get("/login/logout") // Ensure the URL is correct
               .then((response) => {
                 /* console.log(response.data.status); */
                 if (response.data.status) {

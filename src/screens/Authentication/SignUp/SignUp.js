@@ -8,7 +8,7 @@ import { InputBox, CheckBox, FillButton } from "../../../components";
 
 function SignUp({ navigation, route }) {
     const [secureText, setSecureText] = useState(true)
-    const { fullName, email, phone, userType} = route.params
+    const { fullName, email, phone, birthday} = route.params
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -27,10 +27,11 @@ function SignUp({ navigation, route }) {
             }
 
             const response = await axios.post('/user/add-user', {
-                role_id: userType, 
+                role_id: null, 
                 fullname: fullName,
                 email: email,
                 phone_number: phone,
+                birthday: birthday,
                 password: password,
             });
 
